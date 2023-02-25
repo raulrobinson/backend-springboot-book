@@ -16,6 +16,7 @@ java -jar -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n 
 ```
 
 **1. Get All Books**
+![img.png](postman/img.png)
 - GET - http://localhost:8080/api/v1/books
 - request: none
 - response: body JSON
@@ -42,6 +43,7 @@ java -jar -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n 
 }
 ```
 **2. Create a Book**
+![img_1.png](postman/img_1.png)
 - POST - http://localhost:8080/api/v1/books
 - request: body JSON
 ```json
@@ -67,6 +69,7 @@ java -jar -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n 
 }
 ```
 **3. Update a Book by ID**
+![img_2.png](postman/img_2.png)
 - PUT - http://localhost:8080/api/v1/books?id=1
 - request: body JSON
 ```json
@@ -92,6 +95,7 @@ response: body JSON
 }
 ```
 **4. Delete Book by ID**
+![img_3.png](postman/img_3.png)
 - DELETE - http://localhost:8080/api/v1/books?id=1
 - request: none
 - response: body JSON
@@ -103,6 +107,7 @@ response: body JSON
 }
 ```
 **5. Find Book by Codebook**
+![img_4.png](postman/img_4.png)
 - GET - http://localhost:8080/api/v1/books/codebook?codebook=1010001
 - request: Query Params / codebook: string
 - response: body JSON
@@ -120,6 +125,7 @@ response: body JSON
 }
 ```
 **6. Find Book by ID**
+![img_5.png](postman/img_5.png)
 - GET - http://localhost:8080/api/v1/books/id?id=2
 - request: Query Params / id: long
 - response: body JSON
