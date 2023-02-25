@@ -1,7 +1,7 @@
-# Books Service API Rest with Spring Boot
+# Books Service API Rest with Spring Boot & H2 in-memory database.
+Micro Service development in Spring Boot, modeling the response for a REST API Server, backend services.
 
 ![img_2.png](postman/img_6.jpg)
-Micro Service development in Spring Boot, modeling the response for a REST API Server, backend services.
 
 - Build a JAR
 ```text
