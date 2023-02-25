@@ -48,7 +48,7 @@ java -jar -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n 
 }
 ```
 **2. Create a Book**
-![img_1.png](postman/img_1.png)
+![img.png](postman/img_1.png)
 - POST - http://localhost:8080/api/v1/books
 - request: body JSON
 ```json
