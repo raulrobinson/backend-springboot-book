@@ -2,14 +2,16 @@
 
 Micro Service development in Spring Boot, modeling the response for a REST API Server, backend services.
 
+- Build a JAR
 ```text
-# Build a JAR
 mvn clean package
-
-# Run a JAR
+```
+- Run a JAR
+```text
 mvn spring-boot:run
-
-# Run in Debug mode.
+```
+- Run in Debug mode.
+```text
 java -jar -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n your-app.jar
 ```
 
@@ -144,7 +146,7 @@ COPY ./target/backend-springboot-book.jar backend-springboot-book.jar
 ENTRYPOINT ["java","-jar","backend-springboot-book.jar"]
 ```
 
-#### Docker Hub
+### Docker Hub
 
 - Login into Docker Hub account
 ```text
