@@ -16,6 +16,10 @@ mvn spring-boot:run
 java -jar -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n your-app.jar
 ```
 
+## Swagger for documentation service
+- http://localhost:8080/swagger-ui/index.html
+![img.png](postman/img_7.png)
+
 **1. Get All Books**
 ![img.png](postman/img.png)
 - GET - http://localhost:8080/api/v1/books
