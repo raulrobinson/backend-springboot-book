@@ -1,31 +1,20 @@
 package com.coder.ws.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import com.coder.ws.dto.BookRequestDTO;
+import com.coder.ws.dto.BookResponseDTO;
 import com.coder.ws.model.Book;
-import com.coder.ws.repository.BookRepository;
 import com.coder.ws.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping(path = "${controller.properties.base-path}", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BookController {
 
@@ -36,87 +25,136 @@ public class BookController {
 	}
 
 	@GetMapping("/books")
-	public ResponseEntity<List<Book>> getAllTutorials(@RequestParam(required = false) String title) {
+	public ResponseEntity<BookResponseDTO> getAllBooks() {
 		try {
-			List<Book> books = new ArrayList<>();
-			if (title == null)
-				books.addAll(bookService.findAll());
-			else
-				books.addAll(bookService.findByTitleContaining(title));
-			if (books.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			List<Book> books = bookService.findBookAll();
+			if (books == null) {
+				return new ResponseEntity<>(BookResponseDTO.builder()
+						.code(200L)
+						.message("404 Not Found")
+						.data(null)
+						.build(), HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity<>(books, HttpStatus.OK);
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(200L)
+					.message("200 OK")
+					.data(books)
+					.build(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(503L)
+					.message("503 Server Internal Error")
+					.data(null)
+					.build(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	/*@GetMapping("/books/{id}")
-	public ResponseEntity<Book> getTutorialById(@PathVariable("id") long id) {
-		List<Book> tutorialData = bookService.findById(id);
-		return tutorialData.map(book ->
-				new ResponseEntity<>(book, HttpStatus.OK))
-				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-	}*/
+	@GetMapping("/books/codebook")
+	public ResponseEntity<BookResponseDTO> getBookByCodebook(
+			@RequestParam("codebook") String codebook) {
+		try {
+			Book bookData = bookService.getByCodebook(codebook);
+			if (bookData == null)
+				return new ResponseEntity<>(BookResponseDTO.builder()
+						.code(404L)
+						.message("404 Not Found")
+						.data(null)
+						.build(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(200L)
+					.message("200 OK")
+					.data(bookData)
+					.build(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(503L)
+					.message("503 Server Internal Error")
+					.data(null)
+					.build(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/books/id")
+	public ResponseEntity<BookResponseDTO> findById(
+			@RequestParam(value = "id", required = true) Long id) {
+		try {
+			Book book = bookService.getBookById(id);
+			if (book == null) {
+				return new ResponseEntity<>(BookResponseDTO.builder()
+						.code(404L)
+						.message("404 Not Found")
+						.data(null)
+						.build(), HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(200L)
+					.message("200 OK")
+					.data(book)
+					.build(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(503L)
+					.message("503 Server Internal Error")
+					.data(null)
+					.build(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	@PostMapping("/books")
-	public ResponseEntity<Book> createTutorial(@RequestBody Book book) {
+	public ResponseEntity<BookResponseDTO> createBook(
+			@RequestBody BookRequestDTO book) {
 		try {
-			Book req = bookService
-					.save(new Book(book.getTitle(), book.getDescription(), false));
-			return new ResponseEntity<>(req, HttpStatus.CREATED);
+			Book req = bookService.createBook(book);
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(200L)
+					.message("200 OK")
+					.data(req)
+					.build(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(503L)
+					.message("503 Server Internal Error")
+					.data(null)
+					.build(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	/*@PutMapping("/books/{id}")
-	public ResponseEntity<Book> updateTutorial(@PathVariable("id") long id, @RequestBody Book book) {
-		List<Book> tutorialData = bookService.findById(id);
-		if (tutorialData.isPresent()) {
-			Book req = tutorialData.get();
-			req.setTitle(book.getTitle());
-			req.setDescription(book.getDescription());
-			req.setPublished(book.isPublished());
-			return new ResponseEntity<>(bookService.save(req), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}*/
-
-	@DeleteMapping("/books/{id}")
-	public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
+	@PutMapping("/books")
+	public ResponseEntity<BookResponseDTO> updateBook(
+			@RequestParam(value = "id", required = true) Long id,
+			@RequestBody BookRequestDTO book) {
 		try {
-			bookService.deleteById(id);
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			Book req = bookService.updateBook(id, book);
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(200L)
+					.message("200 OK")
+					.data(req)
+					.build(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(404L)
+					.message("404 Not Found")
+					.data(null)
+					.build(), HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@DeleteMapping("/books")
-	public ResponseEntity<HttpStatus> deleteAllTutorials() {
+	public ResponseEntity<BookResponseDTO> deleteBook(
+			@RequestParam(value = "id", required = true) Long id) {
 		try {
-			bookService.deleteAll();
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			Book req = bookService.deleteById(id);
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(200L)
+					.message("200 OK")
+					.data(req)
+					.build(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-	}
-
-	@GetMapping("/books/published")
-	public ResponseEntity<List<Book>> findByPublished() {
-		try {
-			List<Book> books = bookService.findByPublished(true);
-
-			if (books.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
-			return new ResponseEntity<>(books, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(BookResponseDTO.builder()
+					.code(404L)
+					.message("404 Not Found")
+					.data(null)
+					.build(), HttpStatus.NOT_FOUND);
 		}
 	}
 

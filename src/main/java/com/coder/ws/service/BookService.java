@@ -1,23 +1,15 @@
 package com.coder.ws.service;
 
+import com.coder.ws.dto.BookRequestDTO;
 import com.coder.ws.model.Book;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public interface BookService {
-    List<Book> findAll();
-
-    List<Book> findByTitleContaining(String title);
-
-    List<Book> findById(long id);
-
-    Book save(Book req);
-
-    Book deleteById(long id);
-
-    Book deleteAll();
-
-    List<Book> findByPublished(boolean b);
+    List<Book> findBookAll();
+    Book createBook(BookRequestDTO book);
+    Book getBookById(Long id);
+    Book getByCodebook(String codebook);
+    Book updateBook(Long id, BookRequestDTO book);
+    Book deleteById(Long id);
 }

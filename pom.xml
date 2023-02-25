@@ -8,30 +8,37 @@
 		<version>2.5.8</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.rsycoder</groupId>
-	<artifactId>spring-boot-books-h2</artifactId>
+	<groupId>com.coder</groupId>
+	<artifactId>backend-springboot-book</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot-jpa-h2</name>
-	<description>Spring Boot JPA + H2 database example - CRUD Rest Apis</description>
-
+	<name>backend-springboot-book</name>
+	<description>Spring Boot JPA + H2 database in-memory - CRUD Rest API</description>
 	<properties>
 		<java.version>11</java.version>
+		<docker.image.prefix>opt</docker.image.prefix>
 		<spring-cloud.version>2020.0.6</spring-cloud.version>
 		<spring-boot-admin.version>2.3.0</spring-boot-admin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.el</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -42,7 +49,6 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-
 		<!-- Starter for using Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -53,14 +59,12 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- Spring Boot Configuration Annotation Processor -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-
 		<!-- JSON API documentation for spring based applications -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -77,7 +81,6 @@
 			<artifactId>springfox-bean-validators</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-
 		<!-- Metrics -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -91,7 +94,6 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
-
 		<!-- The Resources Plugin handles the copying of project resources to the output directory -->
 		<dependency>
 			<groupId>org.apache.maven.plugins</groupId>
@@ -120,7 +122,6 @@
 			<artifactId>maven-surefire-plugin</artifactId>
 			<version>3.0.0-M7</version>
 		</dependency>
-
 		<!-- Starter for testing Spring Boot applications with libraries including JUnit Jupiter, Hamcrest and Mockito -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -163,7 +164,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 	<build>
 		<finalName>${project.name}</finalName>
 		<plugins>
@@ -223,8 +223,7 @@
 							</tasks>
 							<target>
 								<zip destfile="${project.build.directory}/app.zip">
-									<zipfileset dir="${project.build.directory}/docker"
-												includes="microservicios.jar" />
+									<zipfileset dir="${project.build.directory}/docker" includes="microservicios.jar" />
 								</zip>
 							</target>
 						</configuration>
@@ -275,34 +274,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.6</version>
-				<executions>
-					<execution>
-						<id>jacoco-initialize</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<phase>test-compile</phase>
-					</execution>
-					<execution>
-						<id>jacoco-site</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
@@ -321,7 +292,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
 	<profiles>
 		<profile>
 			<id>local</id>

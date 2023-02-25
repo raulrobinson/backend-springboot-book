@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 @Component
 @Configuration
 public class SpringFoxConfig {
@@ -35,7 +34,6 @@ public class SpringFoxConfig {
     @Bean
     public Docket api() {
         String regexUri = "/" + this.uriBasePattern + ".*";
-
         return new Docket(DocumentationType.SWAGGER_2)
                 .produces(DEFAULT_PRODUCES_CONSUMES)
                 .consumes(DEFAULT_PRODUCES_CONSUMES)
@@ -47,7 +45,6 @@ public class SpringFoxConfig {
     }
 
     private ApiInfo apiInfo() {
-
         return new ApiInfo(
                 this.swaggerProperties.getProjectName(),
                 this.swaggerProperties.getProjectShortDescription(),
